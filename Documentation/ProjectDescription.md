@@ -2,6 +2,7 @@ Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
 # Senior Citizens Senior Dating Site
 
 **Intended Audience:** Adults aged 60+
+
 **Intended Use:** The website will cater to seniors who want to engage in online dating but may feel intimidated by the complexity of other dating platforms. These users may not be as familiar with modern technology and may require accessibility aids, so the system must be user-friendly and intuitive to navigate.
 
 **Functionality:**  The primary function of the system will be to help elderly people find suitable partners or companions, whether for romantic relationships or friendships. Users will be able to create personalized profiles that include basic information, interests, pictures, and preferences, and they can browse through other users' profiles based on location, interests, or compatibility. After matching, the users will be able to message said matches. The application will include features specifically designed for older users to create a comfortable and fun experience like any other dating app, such as larger, contrasting text, magnification, and text-to-speech.

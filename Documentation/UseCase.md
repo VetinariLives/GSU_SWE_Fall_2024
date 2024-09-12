@@ -1,15 +1,15 @@
 # Senior Citizens Senior Dating Website Use Cases
 
 	User Registration and Profile Creation
-The system shall enable users to complete registration by entering details like age, location, interests, and relationship preferences.
+* The system shall enable users to complete registration by entering details like age, location, interests, and relationship preferences.
 The system shall provide users with the ability to personalize their profiles by uploading photos and adding a bio.
 The system shall verify user accounts via email or SMS to confirm their authenticity.
-
+<!-- -->
 	Search and Matchmaking System
-The system shall provide advanced search filters, allowing users to search by criteria such as age range, location, interests, and relationship preferences.
+* The system shall provide advanced search filters, allowing users to search by criteria such as age range, location, interests, and relationship preferences.
 The system shall automatically suggest potential matches based on compatibility, including factors like shared hobbies and proximity.
 The system shall feature a "Mutual Interest" notification to inform users of potential matches who share common interests.
-
+<!-- -->
 	Communication Tools  
 The system shall provide messaging options, including text, voice, and video call functionality.  
 The system shall allow users to send both predefined and personalized messages.  

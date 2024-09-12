@@ -87,22 +87,23 @@ Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
 <!-- list end -->
 
 	Maintainability
-* Code should be modular and well-documented for easy updates and improvements in the future.
 
-* Testing should be done on different servers (offline, virtual machine ) or ensure new changes will not break the existing systems.
+* The system shall ensure code is midular and well-documented for easy updates and improvements in the future.
 
-* Error monitoring should be tracked and logged and it should be responded as soon as possible.
+* The system shall test on different servers, or ensure new changes will not break the existing systems.
+
+* The system shall monitor errors and track and log them, and respons as soon as possible
 <!-- list end -->
 
 	Compliance
 *  The system should adhere to regulations around data handling, online safety, and age verification
 
-* Policies and systems should be in place for managing and moderating.
+* The system shall implement policies and system for managing and moderating.
 <!-- list end -->
 
-* Ensure the website functions seamlessly across all major browsers
+* The system shall ensure the website functions seamlessly across all major browsers
 
-* The website should support multiple languages based on the regions it servers.
+* The system shall support multiple languages based on the regions it servers.
 
 ### Functional Requirements
 
@@ -182,14 +183,13 @@ Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
 * The system shall present clear, easy-to-understand terms of service and privacy policies.
 <!-- list end -->
 	Localization  
-* The system shall support multiple languages and regional variants to accommodate international users.  
 * The system shall provide time-zone-specific event listings and profile matching.
 <!-- list end -->
 	Maintainability
-* The system shall be built with a clean, modular codebase to facilitate easy updates and new feature integrations.  
+* The system shall have a clean, modular codebase to facilitate easy updates and new feature integrations.  
 * The system shall include comprehensive developer documentation, with detailed setup and deployment instructions.
 <!-- list end -->
-	Support for Low-Tech Users 
+	Accessibility 
 * The system shall include built-in guides or video tutorials to assist users in navigating the platform.  
 * The system shall offer a simplified registration and interaction process for users with limited technical experience.
 <!-- list end -->

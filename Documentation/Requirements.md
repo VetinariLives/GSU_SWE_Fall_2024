@@ -77,9 +77,9 @@ Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
 
 * The system or platform should be up at all times or available at any time.
 
-* Maintenance or updates should be at minimum times.
+* The system shall maintenance or updates should be at minimum times.
 
-* Backup and recovery should be regular to protect data and server from any incident happens.
+* The system shall Backup and recovery should be regular to protect data and server from any incident happens.
 <!-- list end -->
 
  	Scalability
@@ -87,22 +87,23 @@ Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
 <!-- list end -->
 
 	Maintainability
-* Code should be modular and well-documented for easy updates and improvements in the future.
 
-* Testing should be done on different servers (offline, virtual machine ) or ensure new changes will not break the existing systems.
+* The system shall ensure code is midular and well-documented for easy updates and improvements in the future.
 
-* Error monitoring should be tracked and logged and it should be responded as soon as possible.
+* The system shall test on different servers, or ensure new changes will not break the existing systems.
+
+* The system shall monitor errors and track and log them, and respons as soon as possible
 <!-- list end -->
 
 	Compliance
 *  The system should adhere to regulations around data handling, online safety, and age verification
 
-* Policies and systems should be in place for managing and moderating.
+* The system shall implement policies and system for managing and moderating.
 <!-- list end -->
 
-* Ensure the website functions seamlessly across all major browsers
+* The system shall ensure the website functions seamlessly across all major browsers
 
-* The website should support multiple languages based on the regions it servers.
+* The system shall support multiple languages based on the regions it servers.
 
 ### Functional Requirements
 

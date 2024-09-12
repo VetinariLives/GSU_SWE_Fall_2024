@@ -87,9 +87,9 @@ Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
 <!-- list end -->
 
 	Maintainability
-*Code should be modular and well-documented for easy updates and improvements in the future.
+* Code should be modular and well-documented for easy updates and improvements in the future.
 
-*Testing should be done on different servers (offline, virtual machine ) or ensure new changes will not break the existing systems.
+* Testing should be done on different servers (offline, virtual machine ) or ensure new changes will not break the existing systems.
 
 * Error monitoring should be tracked and logged and it should be responded as soon as possible.
 <!-- list end -->

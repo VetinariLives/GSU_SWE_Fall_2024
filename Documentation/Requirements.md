@@ -182,14 +182,13 @@ Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
 * The system shall present clear, easy-to-understand terms of service and privacy policies.
 <!-- list end -->
 	Localization  
-* The system shall support multiple languages and regional variants to accommodate international users.  
 * The system shall provide time-zone-specific event listings and profile matching.
 <!-- list end -->
 	Maintainability
-* The system shall be built with a clean, modular codebase to facilitate easy updates and new feature integrations.  
+* The system shall have a clean, modular codebase to facilitate easy updates and new feature integrations.  
 * The system shall include comprehensive developer documentation, with detailed setup and deployment instructions.
 <!-- list end -->
-	Support for Low-Tech Users 
+	Accessibility 
 * The system shall include built-in guides or video tutorials to assist users in navigating the platform.  
 * The system shall offer a simplified registration and interaction process for users with limited technical experience.
 <!-- list end -->

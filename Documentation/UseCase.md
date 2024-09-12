@@ -46,7 +46,7 @@
 * The system shall offer a dedicated mobile app for iOS and Android devices.
 <!-- list end -->
 --------------------------------------------------
-Non-Functional Requirements
+### Non-Functional Requirements
 
 	Usability
 * The system shall feature a simple, user-friendly interface designed for seniors, with larger text and easily clickable buttons.  

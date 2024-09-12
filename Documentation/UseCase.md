@@ -1,5 +1,5 @@
 # Senior Citizens Senior Dating Website Use Cases
-# Functional Requirements
+### Functional Requirements
 
 	User Registration and Profile Creation
 * The system shall enable users to complete registration by entering details like age, location, interests, and relationship preferences.

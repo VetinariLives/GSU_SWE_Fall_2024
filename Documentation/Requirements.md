@@ -5,7 +5,7 @@ Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
 
 	User Registration and Authentication
 
-* The system shall allow user to create profile and set his credential. 
+* The system shall allow the user to create a profile and set credentials. 
 
 * The system shall authenticate user credentials to view the profile.
 
@@ -104,8 +104,6 @@ Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
 
 * The website should support multiple languages based on the regions it servers.
 
-
-# Senior Citizens Senior Dating Website Use Cases
 ### Functional Requirements
 
 	User Registration and Profile Creation

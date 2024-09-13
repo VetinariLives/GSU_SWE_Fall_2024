@@ -4,49 +4,17 @@ Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
 ## Functional Requirements
 
 	User Registration and Authentication
-
-* The system shall allow the user to create a profile and set credentials. 
-
-* The system shall authenticate user credentials to view the profile.
-
 * Users can reset password and verify with their email.
 <!-- list end -->
 	Profile Creation/Managment
 
-* Users can create a custom profile with their own details.
-
 * Users can add name, age, gender, and location.
-
-* Users can add what they are interested in.
-
-* Users can add profile pictures.
-
 * Users can also update or delete profiles at anytime.
 <!-- list end -->
 
-	Search and Filter 
-
-* Users can search/filter for other users based on details mentioned above.
-<!-- list end -->
-	Matchmaking
-
-* System will suggest profiles to users based on an algorithm.
-
-* Users can recieve notifications when they are matched to another user.
-<!-- list end -->
 	Messaging 
 
 * If users match with each other based on system above, they shuold be able to send and receive messages securely.
-
-* Notications will be sent when users receive a message.
-<!-- list end -->
-	Accessibility
-
-* Users can adjust text size and contrast.
-
-* Users can use magnifying glass to view text.
-
-* Text-to-speech functionality will be available for users when viewing profiles and messages.
 <!-- list end -->
 
 ## Non-functional Requirements
@@ -62,17 +30,6 @@ Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
  * The system shall encrypt user data in transit and at rest.
   <!-- list end -->
 
-
- 	Performance
-
-* The system shall load in under 2 seconds for optimal user experience.
-
-* The system shall support thousands of concurrent users at the same time.
-
-* The system shall be able to handle more users and data without any degradation in the future.
-<!-- list end -->
-
-
   	Availability
 
 * The system shall be up at all times or available at any time.
@@ -80,10 +37,6 @@ Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
 * The system shall do maintenance or updates at minimum times.
 
 * The system shall do backups and recovery regularly to protect data and server from any incident happens.
-<!-- list end -->
-
- 	Scalability
-* The system shall be designed to add more servers to manage traffic as users grow.
 <!-- list end -->
 
 	Maintainability
@@ -102,8 +55,6 @@ Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
 <!-- list end -->
 
 * The system shall ensure the website functions seamlessly across all major browsers
-
-* The system shall support multiple languages based on the regions it servers.
 
 ### Functional Requirements
 

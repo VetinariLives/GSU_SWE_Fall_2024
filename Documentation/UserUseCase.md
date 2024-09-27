@@ -4,5 +4,6 @@
 | Description | Text        |
 | Data | Text        |
 | Stimulus | Text        |
-| Response | Text        |
+| Response | Confirmation that the data has been transferred or exported
+successfully        |
 | Comments | Text        |

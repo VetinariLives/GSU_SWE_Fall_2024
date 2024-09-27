@@ -2,8 +2,7 @@
 Use Case: 
 
 Actors:  
-- System Admin  
-- Dating Website Backend System
+System Admin, Dating Website Backend System
 
 Description:  
 A system admin oversees user requests to transfer their profile data from the dating website to a personal backup or a partner application. This includes ensuring that the correct data (personal details, matches, messages, likes) is securely transferred.

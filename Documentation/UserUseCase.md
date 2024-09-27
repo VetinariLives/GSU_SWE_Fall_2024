@@ -1,3 +1,6 @@
+Team 7: Anaisha Foster, Hieu Nguyen, Kayla Clark, Samyak Jain, Talha Ansari
+
+
 | Seniors Dating Site:      | Transfer/Export Data |
 | ----------- | ----------- |
 | Actors | User, Dating website backend system |

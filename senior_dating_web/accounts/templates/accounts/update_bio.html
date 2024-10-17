@@ -1,0 +1,9 @@
+<h1>Update Your Bio</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Bio</button>
+</form>
+
+<a href="{% url 'main_page' %}">Cancel</a>

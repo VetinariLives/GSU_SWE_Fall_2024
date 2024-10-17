@@ -1,0 +1,6 @@
+<h1>Potential Matches</h1>
+<ul>
+{% for match in matches %}
+    <li>{{ match.username }} ({{ match.age }}) from {{ match.location }}</li>
+{% endfor %}
+</ul>

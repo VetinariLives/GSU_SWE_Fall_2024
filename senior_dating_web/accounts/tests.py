@@ -3,6 +3,8 @@ from django.urls import reverse
 from django.core import mail
 from django.contrib.auth import get_user_model
 from .models import User  # Import User for Forgot Password tests
+from accounts.models import Message
+
 
 User = get_user_model()
 
@@ -114,3 +116,39 @@ class ForgotPasswordTests(TestCase):
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password('newpassword123'))  # Ensure the new password works
 
+
+class SendMessageTest(TestCase):
+
+    def setUp(self):
+        # Create two users: a sender and a receiver, with 'age' field
+        self.sender = User.objects.create_user(username='sender', password='testpass123', age=30)
+        self.receiver = User.objects.create_user(username='receiver', password='testpass123', age=25)
+
+        # Log in the sender user
+        self.client.login(username='sender', password='testpass123')
+
+    def test_send_message(self):
+        # The URL for sending a message, using the receiver's user ID
+        url = reverse('send_message', kwargs={'user_id': self.receiver.id})
+
+        # Data to send with the POST request (the message content)
+        message_data = {
+            'message': 'Hello, this is a test message.'
+        }
+
+        # Send a POST request to the send_message view
+        response = self.client.post(url, data=message_data)
+
+        # Check that the message was created
+        self.assertEqual(Message.objects.count(), 1)
+
+        # Get the created message
+        message = Message.objects.first()
+
+        # Verify the message content and associations
+        self.assertEqual(message.text, 'Hello, this is a test message.')
+        self.assertEqual(message.sender, self.sender)
+        self.assertEqual(message.receiver, self.receiver)
+
+        # Ensure the view redirects back to the send_message page after sending
+        self.assertRedirects(response, reverse('send_message', kwargs={'user_id': self.receiver.id}))

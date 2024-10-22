@@ -19,5 +19,9 @@ urlpatterns = [
     path('accept_friend_request/<int:request_id>/', views.accept_friend_request, name='accept_friend_request'),
     path('decline_friend_request/<int:request_id>/', views.decline_friend_request, name='decline_friend_request'),
     path('send_message/<int:user_id>/', views.send_message, name='send_message'),
+
+    # New
+    path('confirm-delete/<int:user_id>/', views.confirm_delete, name='confirm_delete'),
+
 ]
 

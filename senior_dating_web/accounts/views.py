@@ -11,7 +11,8 @@ from .forms import MatchFilterForm
 from django import forms
 from django.db import models
 from .forms import UpdateProfileImageForm  # Import the form you created
-
+from django.core.mail import send_mail #New Mail System
+from django.contrib import messages  # New 
 
 
 
@@ -67,13 +68,54 @@ def main_page(request):
     profile_image = request.user.profile_image
     return render(request, 'accounts/main_page.html', {'user_name': user_name})
 
+#delete account email confirm
+@login_required
 def delete_account(request):
+    """Render a form to enter email and send confirmation email if correct."""
     if request.method == 'POST':
-        user = request.user
-        logout(request)  # Log the user out first
-        user.delete()  # Delete the user account
-        return redirect('home')  # Redirect to home page after deletion
+        entered_email = request.POST.get('email')  # Get the email from the form
+        registered_email = request.user.email  # Get the registered email
+
+        if entered_email == registered_email:
+            # Send the confirmation email
+            send_mail(
+                'Confirm Account Deletion',
+                f'Hello {request.user.username},\n\n'
+                'Click the link below to confirm the deletion of your account:\n'
+                f'http://127.0.0.1:8000/accounts/confirm-delete/{request.user.id}/',
+                'no-reply@example.com',
+                [registered_email],
+                fail_silently=False,
+            )
+            messages.success(request, 'A confirmation email has been sent to your email address.')
+            return redirect('main_page')  # Redirect to the main page
+        else:
+            # Show an error message if the email doesn't match
+            messages.error(request, 'The email you entered does not match your account email.')
+
+    # Render the delete account form
     return render(request, 'accounts/delete_account.html')
+
+# accounts/views.py
+
+@login_required
+def confirm_delete(request, user_id):
+    """Delete the user's account after confirmation."""
+    User = get_user_model()
+    user = get_object_or_404(User, id=user_id)
+
+    # Log the user out and delete their account
+    logout(request)
+    user.delete()
+
+    messages.success(request, 'Your account has been successfully deleted.')
+    return redirect('home')  # Redirect to the home page
+
+
+
+
+
+
 
 def main_page(request):
     user_name = request.user.name  # Get the logged-in user's name

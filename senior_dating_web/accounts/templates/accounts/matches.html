@@ -1,6 +1,31 @@
-<h1>Potential Matches</h1>
+<h1>Filter Matches</h1>
+
+<form method="get" action="{% url 'find_matches' %}">
+    {{ form.as_p }}
+    <button type="submit">Filter Matches</button>
+</form>
+
+<h2>Your Matches:</h2>
 <ul>
-{% for match in matches %}
-    <li>{{ match.username }} ({{ match.age }}) from {{ match.location }}</li>
-{% endfor %}
+    {%if matches%}
+        
+        {% for match in matches %}
+            <li>
+                {{ match.name }} ({{ match.age }} years old) - {{ match.location }}
+                <!-- Send Friend Request button -->
+                    <p>
+                <form method="post" action="{% url 'send_friend_request' match.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Send Friend Request</button>  
+                </form>
+                </p>
+                <a href="{% url 'send_message' match.id %}"><button type="submit">Chat</button></a>
+            </li>
+        {% endfor %}
+    {%else%}
+        <li>Filter your matches</li>
+
+    {%endif%}
 </ul>
+
+<a href="{% url 'main_page' %}">Back to main page</a>

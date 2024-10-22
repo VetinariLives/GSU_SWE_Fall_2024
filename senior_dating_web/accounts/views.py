@@ -11,8 +11,7 @@ from .forms import MatchFilterForm
 from django import forms
 from django.db import models
 from .forms import UpdateProfileImageForm  # Import the form you created
-from django.core.mail import send_mail #New Mail System
-from django.contrib import messages  # New 
+from django.db.models import Q
 
 
 
@@ -32,11 +31,49 @@ def register(request):
         form = CustomUserCreationForm()
     return render(request, 'accounts/register.html', {'form': form})
 
-
 def find_matches(request):
     current_user = request.user
-    potential_matches = User.objects.exclude(id=current_user.id).filter(gender=current_user.gender)
-    return render(request, 'accounts/matches.html', {'matches': potential_matches})
+    
+    # Get all users except the logged-in user
+    matches = User.objects.exclude(id=current_user.id)
+
+    # Get the friends of the logged-in user and exclude them from the matches
+    friends = FriendRequest.objects.filter(
+        (Q(from_user=current_user) | Q(to_user=current_user)),
+        status='accepted'
+    ).select_related('to_user', 'from_user')
+
+    friend_ids = []
+    for friend in friends:
+        if friend.from_user == current_user:
+            friend_ids.append(friend.to_user.id)
+        else:
+            friend_ids.append(friend.from_user.id)
+
+    matches = matches.exclude(id__in=friend_ids)
+
+    # Handle the filter form
+    form = MatchFilterForm(request.GET or None)
+    if form.is_valid():
+        # Apply filters based on form data
+        min_age = form.cleaned_data.get('min_age')
+        max_age = form.cleaned_data.get('max_age')
+        gender = form.cleaned_data.get('gender')
+        location = form.cleaned_data.get('location')
+
+        if min_age:
+            matches = matches.filter(age__gte=min_age)
+        if max_age:
+            matches = matches.filter(age__lte=max_age)
+        if gender:
+            matches = matches.filter(gender=gender)
+        if location:
+            matches = matches.filter(location__icontains=location)
+
+    return render(request, 'accounts/matches.html', {
+        'matches': matches,
+        'form': form,
+    })
 
 from .models import Message
 
@@ -62,60 +99,15 @@ def custom_login(request):
         form = AuthenticationForm()
     return render(request, 'accounts/login.html', {'form': form})
 
-def main_page(request):
-    user_name = request.user.name  # Access the logged-in user's name
-    user_bio = request.user.bio
-    profile_image = request.user.profile_image
-    return render(request, 'accounts/main_page.html', {'user_name': user_name})
 
-#delete account email confirm
-@login_required
+
 def delete_account(request):
-    """Render a form to enter email and send confirmation email if correct."""
     if request.method == 'POST':
-        entered_email = request.POST.get('email')  # Get the email from the form
-        registered_email = request.user.email  # Get the registered email
-
-        if entered_email == registered_email:
-            # Send the confirmation email
-            send_mail(
-                'Confirm Account Deletion',
-                f'Hello {request.user.username},\n\n'
-                'Click the link below to confirm the deletion of your account:\n'
-                f'http://127.0.0.1:8000/accounts/confirm-delete/{request.user.id}/',
-                'no-reply@example.com',
-                [registered_email],
-                fail_silently=False,
-            )
-            messages.success(request, 'A confirmation email has been sent to your email address.')
-            return redirect('main_page')  # Redirect to the main page
-        else:
-            # Show an error message if the email doesn't match
-            messages.error(request, 'The email you entered does not match your account email.')
-
-    # Render the delete account form
+        user = request.user
+        logout(request)  # Log the user out first
+        user.delete()  # Delete the user account
+        return redirect('home')  # Redirect to home page after deletion
     return render(request, 'accounts/delete_account.html')
-
-# accounts/views.py
-
-@login_required
-def confirm_delete(request, user_id):
-    """Delete the user's account after confirmation."""
-    User = get_user_model()
-    user = get_object_or_404(User, id=user_id)
-
-    # Log the user out and delete their account
-    logout(request)
-    user.delete()
-
-    messages.success(request, 'Your account has been successfully deleted.')
-    return redirect('home')  # Redirect to the home page
-
-
-
-
-
-
 
 def main_page(request):
     user_name = request.user.name  # Get the logged-in user's name
@@ -151,7 +143,6 @@ class UpdateBioForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['bio']
-
 
 def update_bio(request):
     if request.method == 'POST':
@@ -194,7 +185,19 @@ def main_page(request):
     sent_requests = FriendRequest.objects.filter(from_user=request.user, status='pending')
 
     # Get the user's friends
-    friends = Friendship.objects.filter(from_user=request.user).select_related('to_user')
+    friends = FriendRequest.objects.filter(
+        (models.Q(from_user=request.user) | models.Q(to_user=request.user)),
+        status='accepted'
+    ).select_related('to_user', 'from_user')
+
+    friend_ids = []
+    for friend in friends:
+        if friend.from_user == request.user:
+            friend_ids.append(friend.to_user.id)
+        else:
+            friend_ids.append(friend.from_user.id)
+    
+    matches = matches.exclude(id__in=friend_ids)
 
     return render(request, 'accounts/main_page.html', {
         'user_name': user_name,
@@ -229,7 +232,6 @@ def decline_friend_request(request, request_id):
     friend_request.delete()  # Remove the friend request
     return redirect('main_page')
 
-
 def send_message(request, user_id):
     receiver = get_object_or_404(User, id=user_id)
     if request.method == 'POST':
@@ -254,3 +256,4 @@ def remove_friend(request, user_id):
     FriendRequest.objects.filter(from_user=friend, to_user=request.user, status='accepted').delete()
     
     return redirect('main_page')  # Redirect back to the main page
+

@@ -2,20 +2,21 @@
 
 <!-- Conversation -->
 <div>
-    <ul>
-        {% for message in conversation %}
-            <li>
-                <strong>{{ message.sender.name }}:</strong> {{ message.text }} <small>{{ message.timestamp }}</small>
-            </li>
-        {% endfor %}
-    </ul>
+  <ul>
+    {% for message in conversation %}
+    <li>
+      <strong>{{ message.sender.name }}:</strong> {{ message.text }}
+      <small>{{ message.timestamp }}</small>
+    </li>
+    {% endfor %}
+  </ul>
 </div>
 
 <!-- Message form -->
 <form method="post">
-    {% csrf_token %}
-    <textarea name="message" placeholder="Type your message here..."></textarea>
-    <button type="submit">Send</button>
+  {% csrf_token %}
+  <textarea name="message" placeholder="Type your message here..."></textarea>
+  <button type="submit">Send</button>
 </form>
 
 <a href="{% url 'main_page' %}">Back to main page</a>

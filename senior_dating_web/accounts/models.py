@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.contrib.auth import get_user_model
-
+from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
@@ -12,9 +12,9 @@ class User(AbstractUser):
     location = models.CharField(max_length=255)
     bio = models.TextField(blank=True)
     profile_image = models.ImageField(upload_to='profile_pics/', blank=True, null=True)  # Field for the profile picture
-
     def __str__(self):
         return self.username
+
     
 class Match(models.Model):
     user1 = models.ForeignKey(User, related_name='matches_as_user1', on_delete=models.CASCADE)

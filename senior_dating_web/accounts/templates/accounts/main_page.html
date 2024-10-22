@@ -32,19 +32,25 @@
 
 <h2>Your Matches:</h2>
 <ul>
-    {% for match in matches %}
-        <li>
-            {{ match.name }} ({{ match.age }} years old) - {{ match.location }}
-            <!-- Send Friend Request button -->
-             <p>
-            <form method="post" action="{% url 'send_friend_request' match.id %}">
-                {% csrf_token %}
-                <button type="submit">Send Friend Request</button>  
-            </form>
-            </p>
-            <a href="{% url 'send_message' match.id %}"><button type="submit">Chat</button></a>
-        </li>
-    {% endfor %}
+    {%if matches%}
+        
+        {% for match in matches %}
+            <li>
+                {{ match.name }} ({{ match.age }} years old) - {{ match.location }}
+                <!-- Send Friend Request button -->
+                    <p>
+                <form method="post" action="{% url 'send_friend_request' match.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Send Friend Request</button>  
+                </form>
+                </p>
+                <a href="{% url 'send_message' match.id %}"><button type="submit">Chat</button></a>
+            </li>
+        {% endfor %}
+    {%else%}
+        <li>Filter your matches</li>
+
+    {%endif%}
 </ul>
 
 
@@ -107,7 +113,7 @@
         
     {% endfor %}
     {% if not friends %}
-        <p>You haven't added any friends yet.</p>
+        <p><li>You haven't added any friends yet.</li></p>
     {% endif %}
 </ul>
 

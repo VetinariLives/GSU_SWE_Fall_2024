@@ -1,9 +1,8 @@
 <h1>Update Your Profile Picture</h1>
 
 <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Profile Picture</button>
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">Save Profile Picture</button>
 </form>
 
 <a href="{% url 'main_page' %}">Cancel</a>

@@ -19,6 +19,8 @@ class UserManager(BaseUserManager):
             raise ValueError('Superuser must have is_staff=True.')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
+        
+        extra_fields.setdefault('age', 0)
 
         user = self.create_user(username, email, password, **extra_fields)
         user.save(using=self._db)
@@ -28,7 +30,7 @@ class User(AbstractUser):
     GENDER_CHOICES = [('M', 'Male'), ('F', 'Female')]
     name = models.CharField(max_length=100, blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    age = models.PositiveIntegerField()
+    age = models.IntegerField(default=0)
     location = models.CharField(max_length=255)
     bio = models.TextField(blank=True)
     profile_image = models.ImageField(upload_to='profile_pics/', blank=True, null=True)  # Allow null for backward compatibility

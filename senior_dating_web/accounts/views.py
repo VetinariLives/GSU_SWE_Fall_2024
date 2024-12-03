@@ -7,14 +7,13 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.db.models import Q
 from django.contrib import messages
-from django.shortcuts import redirect, render
-from django.contrib.auth import logout
-from django.contrib import messages
+
 
 def home(request):
     if request.user.is_authenticated:
         return redirect('main_page')  # Redirect logged-in users
     return render(request, 'home.html')  # Public homepage
+
 
 def custom_logout(request):
     logout(request)
@@ -39,6 +38,7 @@ def register(request):
         form = CustomUserCreationForm()
     return render(request, 'accounts/register.html', {'form': form})
 
+
 # Main page view
 @login_required
 def main_page(request):
@@ -49,7 +49,7 @@ def main_page(request):
     # Fetch matches, friends, etc.
     form = MatchFilterForm(request.GET or None)
     matches = User.objects.exclude(id=request.user.id)
-    
+
     # Exclude friends from matches
     friends = FriendRequest.objects.filter(
         (Q(from_user=request.user) | Q(to_user=request.user)),
@@ -89,26 +89,35 @@ def main_page(request):
         'incoming_requests': incoming_requests,
         'sent_requests': sent_requests
     })
-    
 
-# Finding matches
+
+# Find Matches (Replaced with Code 2 Version)
 @login_required
 def find_matches(request):
     current_user = request.user
-    matches = User.objects.exclude(id=current_user.id)
+    matches = User.objects.none()  # Default to an empty queryset
 
-    # Exclude friends from matches
-    friends = FriendRequest.objects.filter(
-        (Q(from_user=current_user) | Q(to_user=current_user)),
-        status='accepted'
-    ).select_related('to_user', 'from_user')
-
-    friend_ids = [friend.to_user.id if friend.from_user == current_user else friend.from_user.id for friend in friends]
-    matches = matches.exclude(id__in=friend_ids)
-
-    # Handle filters
+    # Handle the filter form
     form = MatchFilterForm(request.GET or None)
-    if form.is_valid():
+    if form.is_valid() and request.GET:  # Check if there are filters applied
+        matches = User.objects.exclude(id=current_user.id)
+
+        # Get the friends of the logged-in user and exclude them from the matches
+        friends = FriendRequest.objects.filter(
+            (Q(from_user=current_user) | Q(to_user=current_user)),
+            status='accepted'
+        ).select_related('to_user', 'from_user')
+
+        friend_ids = []
+        for friend in friends:
+            if friend.from_user == current_user:
+                friend_ids.append(friend.to_user.id)
+            else:
+                friend_ids.append(friend.from_user.id)
+
+        matches = matches.exclude(id__in=friend_ids)
+
+        # Apply filters based on form data
         min_age = form.cleaned_data.get('min_age')
         max_age = form.cleaned_data.get('max_age')
         gender = form.cleaned_data.get('gender')
@@ -117,13 +126,18 @@ def find_matches(request):
         if min_age:
             matches = matches.filter(age__gte=min_age)
         if max_age:
-            matches = matches.filter(age__lte(max_age))
+            matches = matches.filter(age__lte=max_age)
         if gender:
             matches = matches.filter(gender=gender)
         if location:
             matches = matches.filter(location__icontains=location)
 
-    return render(request, 'accounts/matches.html', {'matches': matches, 'form': form})
+    return render(request, 'accounts/matches.html', {
+        'matches': matches,
+        'form': form,
+    })
+
+
 
 # Sending messages
 @login_required
@@ -141,6 +155,7 @@ def send_message(request, user_id):
     ).order_by('timestamp')
 
     return render(request, 'accounts/send_message.html', {'receiver': receiver, 'conversation': conversation})
+
 
 # Forgot Password
 def forgot_password(request):
@@ -184,6 +199,7 @@ def forgot_password(request):
 
     return render(request, 'accounts/forgot_password.html', {'email_form': email_form, 'security_form': security_form, 'user': user})
 
+
 # Reset Password
 @login_required
 def reset_password(request):
@@ -206,6 +222,7 @@ def reset_password(request):
 
     return render(request, 'accounts/reset_password.html', {'form': form})
 
+
 # Updating Bio
 @login_required
 def update_bio(request):
@@ -218,6 +235,7 @@ def update_bio(request):
         form = UpdateBioForm(instance=request.user)
 
     return render(request, 'accounts/update_bio.html', {'form': form})
+
 
 # Updating Profile Image
 @login_required
@@ -232,6 +250,7 @@ def update_profile_image(request):
 
     return render(request, 'accounts/update_profile_image.html', {'form': form})
 
+
 # Friend Request Handling
 @login_required
 def send_friend_request(request, user_id):
@@ -243,6 +262,7 @@ def send_friend_request(request, user_id):
     
     return redirect('main_page')
 
+
 @login_required
 def accept_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, to_user=request.user)
@@ -250,11 +270,13 @@ def accept_friend_request(request, request_id):
     friend_request.save()
     return redirect('main_page')
 
+
 @login_required
 def decline_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, to_user=request.user)
     friend_request.delete()
     return redirect('main_page')
+
 
 @login_required
 def remove_friend(request, user_id):
@@ -262,6 +284,7 @@ def remove_friend(request, user_id):
     FriendRequest.objects.filter(from_user=request.user, to_user=friend, status='accepted').delete()
     FriendRequest.objects.filter(from_user=friend, to_user=request.user, status='accepted').delete()
     return redirect('main_page')
+
 
 # Account Deletion
 @login_required
@@ -285,6 +308,7 @@ def delete_account(request):
 
     return render(request, 'accounts/delete_account.html')
 
+
 @login_required
 def confirm_delete(request, user_id):
     user = get_object_or_404(User, id=user_id)
@@ -296,21 +320,21 @@ def confirm_delete(request, user_id):
 
     return render(request, 'accounts/confirm_delete.html', {'user': user})
 
+
 @login_required
 def add_friend(request, user_id):
-        """Adds a friend for the logged-in user."""
-        friend = get_object_or_404(User, id=user_id)  # Get the user to be added as a friend
-        current_user = request.user
+    """Adds a friend for the logged-in user."""
+    friend = get_object_or_404(User, id=user_id)  # Get the user to be added as a friend
+    current_user = request.user
 
-    #    Ensure there's no existing friend request or friendship
-        existing_request = FriendRequest.objects.filter(from_user=current_user, to_user=friend).exists() or \
-                           FriendRequest.objects.filter(from_user=friend, to_user=current_user).exists()
-        if existing_request:
-            messages.error(request, "Friend request already sent or exists.")
-            return redirect('main_page')
-
-    # Create a new friend request
-        FriendRequest.objects.create(from_user=current_user, to_user=friend)
-        messages.success(request, f"Friend request sent to {friend.username}.")
+    # Ensure there's no existing friend request or friendship
+    existing_request = FriendRequest.objects.filter(from_user=current_user, to_user=friend).exists() or \
+                       FriendRequest.objects.filter(from_user=friend, to_user=current_user).exists()
+    if existing_request:
+        messages.error(request, "Friend request already sent or exists.")
         return redirect('main_page')
 
+    # Create a new friend request
+    FriendRequest.objects.create(from_user=current_user, to_user=friend)
+    messages.success(request, f"Friend request sent to {friend.username}.")
+    return redirect('main_page')

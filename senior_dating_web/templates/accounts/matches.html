@@ -7,25 +7,25 @@
 
 <h2>Your Matches:</h2>
 <ul>
-    {%if matches%}
-        
+    {% if matches.exists %}  <!-- Check if there are matches -->
         {% for match in matches %}
             <li>
                 {{ match.name }} ({{ match.age }} years old) - {{ match.location }}
                 <!-- Send Friend Request button -->
-                    <p>
+                <p>
                 <form method="post" action="{% url 'send_friend_request' match.id %}">
                     {% csrf_token %}
                     <button type="submit">Send Friend Request</button>  
                 </form>
                 </p>
-                <a href="{% url 'send_message' match.id %}"><button type="submit">Chat</button></a>
+                <a href="{% url 'send_message' match.id %}">
+                    <button type="submit">Chat</button>
+                </a>
             </li>
         {% endfor %}
-    {%else%}
-        <li>Filter your matches</li>
-
-    {%endif%}
+    {% else %}
+        <li>No matches yet. Apply filters to find matches!</li>
+    {% endif %}
 </ul>
 
 <a href="{% url 'main_page' %}">Back to main page</a>

@@ -135,7 +135,7 @@
 
       <!-- Filter Matches Form -->
       <form method="get" action="{% url 'find_matches' %}">
-        {{ form.as_p }}
+        
         <button type="submit" class="btn">Filter Matches</button>
       </form>
 
@@ -199,63 +199,35 @@
 
       <!-- Friends List -->
       <h2>Your Friends:</h2>
-      <ul>
-        {% for friendship in friends %}
+<ul>
+    {% for friendship in friends %}
         <li>
-          {% if friendship.from_user == request.user %} {{
-          friendship.to_user.name }} ({{ friendship.to_user.age }} years old) -
-          {{ friendship.to_user.location }}
-          <form
-            method="get"
-            action="{% url 'send_message' friendship.to_user.id %}"
-            class="form-inline"
-          >
-            <button type="submit" class="btn">Chat</button>
-          </form>
-          <form
-            method="post"
-            action="{% url 'remove_friend' friendship.to_user.id %}"
-            class="form-inline"
-          >
-            {% csrf_token %}
-            <button
-              type="submit"
-              class="btn"
-              onclick="return confirm('Are you sure you want to remove this friend?');"
-            >
-              Remove Friend
-            </button>
-          </form>
-          {% elif friendship.to_user == request.user %} {{
-          friendship.from_user.name }} ({{ friendship.from_user.age }} years
-          old) - {{ friendship.from_user.location }}
-          <form
-            method="get"
-            action="{% url 'send_message' friendship.from_user.id %}"
-            class="form-inline"
-          >
-            <button type="submit" class="btn">Chat</button>
-          </form>
-          <form
-            method="post"
-            action="{% url 'remove_friend' friendship.from_user.id %}"
-            class="form-inline"
-          >
-            {% csrf_token %}
-            <button
-              type="submit"
-              class="btn"
-              onclick="return confirm('Are you sure you want to remove this friend?');"
-            >
-              Remove Friend
-            </button>
-          </form>
-          {% endif %}
+            {% if friendship.from_user == request.user %}
+                {{ friendship.to_user.username }} ({{ friendship.to_user.age }} years old) - {{ friendship.to_user.location }}
+                <form method="get" action="{% url 'send_message' friendship.to_user.id %}" class="form-inline">
+                    <button type="submit" class="btn">Chat</button>
+                </form>
+                <form method="post" action="{% url 'remove_friend' friendship.to_user.id %}" class="form-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn" onclick="return confirm('Are you sure you want to remove this friend?');">Remove Friend</button>
+                </form>
+            {% else %}
+                {{ friendship.from_user.username }} ({{ friendship.from_user.age }} years old) - {{ friendship.from_user.location }}
+                <form method="get" action="{% url 'send_message' friendship.from_user.id %}" class="form-inline">
+                    <button type="submit" class="btn">Chat</button>
+                </form>
+                <form method="post" action="{% url 'remove_friend' friendship.from_user.id %}" class="form-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn" onclick="return confirm('Are you sure you want to remove this friend?');">Remove Friend</button>
+                </form>
+            {% endif %}
         </li>
-        {% endfor %} {% if not friends %}
+    {% endfor %}
+    {% if not friends %}
         <p>You haven't added any friends yet.</p>
-        {% endif %}
-      </ul>
+    {% endif %}
+</ul>
+
 
       <!-- Logout Button -->
       <form method="post" action="{% url 'logout' %}">

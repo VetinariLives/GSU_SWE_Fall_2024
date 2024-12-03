@@ -7,7 +7,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('matches/', views.find_matches, name='find_matches'),
     path('send_message/<int:user_id>/', views.send_message, name='send_message'),
-    path('accounts/login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('main/', views.main_page, name='main_page'),
     path('delete_account/', views.delete_account, name='delete_account'),  # URL to delete account
@@ -18,6 +18,7 @@ urlpatterns = [
     path('accept_friend_request/<int:request_id>/', views.accept_friend_request, name='accept_friend_request'),  # URL to accept friend request
     path('decline_friend_request/<int:request_id>/', views.decline_friend_request, name='decline_friend_request'),  # URL to decline friend request
     path('remove_friend/<int:user_id>/', views.remove_friend, name='remove_friend'),  # URL to remove a friend
+    path('forgot_password/', views.forgot_password, name='forgot_password'),
 
     # Password Reset URLs (using Django's built-in views)
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='password_reset.html'), name='password_reset'),

@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import User  # Import your custom User model
+from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.password_validation import  ValidationError as PasswordValidationError
+
 
 class CustomUserCreationForm(UserCreationForm):
     SECURITY_QUESTIONS = [
@@ -49,8 +52,23 @@ class SecurityQuestionForm(forms.Form):
 
 
 class ResetPasswordForm(forms.Form):
-    new_password = forms.CharField(widget=forms.PasswordInput, label='New Password')
-    confirm_password = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')
+    new_password = forms.CharField(
+        widget=forms.PasswordInput,
+        label='New Password',
+        validators=[validate_password]
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput,
+        label='Confirm Password'
+    )
+
+    def clean_new_password(self):
+        new_password = self.cleaned_data.get('new_password')
+        try:
+            validate_password(new_password)
+        except PasswordValidationError as e:
+            raise forms.ValidationError(e.messages)
+        return new_password
 
     def clean(self):
         cleaned_data = super().clean()
@@ -59,5 +77,5 @@ class ResetPasswordForm(forms.Form):
 
         if new_password and confirm_password:
             if new_password != confirm_password:
-                raise forms.ValidationError("Passwords do not match.")
+                raise forms.ValidationError("Passwords do not match. Please try again.")
         return cleaned_data

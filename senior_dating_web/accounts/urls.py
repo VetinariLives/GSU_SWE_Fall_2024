@@ -6,6 +6,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import send_confirmation_email
 from .views import delete_account, confirm_delete_account  # Import the view here
+from .views import reset_password, forgot_password
+
 
 
 urlpatterns = [
@@ -25,6 +27,8 @@ urlpatterns = [
     path('decline_friend_request/<int:request_id>/', views.decline_friend_request, name='decline_friend_request'),  # URL to decline friend request
     path('remove_friend/<int:user_id>/', views.remove_friend, name='remove_friend'),  # URL to remove a friend
     path('forgot_password/', views.forgot_password, name='forgot_password'),
+    path('reset-password/', reset_password, name='reset_password'),
+
 
     # Password Reset URLs (using Django's built-in views)
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='password_reset.html'), name='password_reset'),

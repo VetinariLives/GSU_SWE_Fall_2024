@@ -2,6 +2,9 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('', views.home, name='home'),  # Homepage
     path('register/', views.register, name='register'),
@@ -28,4 +31,4 @@ urlpatterns = [
 
     # Account Deletion Confirmation
     path('accounts/confirm_delete/<int:user_id>/', views.confirm_delete, name='confirm_delete'),  # Clearer naming for account deletion
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

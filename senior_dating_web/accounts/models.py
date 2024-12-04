@@ -84,3 +84,4 @@ class FriendRequest(models.Model):
 
     def __str__(self):
         return f"Friend request from {self.from_user} to {self.to_user}"
+

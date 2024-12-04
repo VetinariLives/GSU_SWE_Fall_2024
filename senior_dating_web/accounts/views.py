@@ -171,7 +171,7 @@ def send_message(request, user_id):
 # Forgot Password
 def forgot_password(request):
     user = None
-    
+
     if request.method == 'POST' and 'email' not in request.session:
         email_form = EmailForm(request.POST)
         if email_form.is_valid():
@@ -191,6 +191,7 @@ def forgot_password(request):
                 answer_1 = security_form.cleaned_data['security_answer_1']
                 answer_2 = security_form.cleaned_data['security_answer_2']
 
+                # Validate security answers
                 if user.security_answer_1 == answer_1 and user.security_answer_2 == answer_2:
                     request.session['user_id'] = user.id  # Store user ID in session
                     return redirect('reset_password')
@@ -204,18 +205,26 @@ def forgot_password(request):
 
     if 'email' in request.session:
         email = request.session.get('email')
-        user = User.objects.get(email=email)
-        security_form = SecurityQuestionForm()
-        email_form = None
+        try:
+            user = User.objects.get(email=email)
+            security_form = SecurityQuestionForm()
+            email_form = None
+        except User.DoesNotExist:
+            del request.session['email']  # Clear invalid email from session
+            return redirect('forgot_password')  # Redirect to start over
 
-    return render(request, 'accounts/forgot_password.html', {'email_form': email_form, 'security_form': security_form, 'user': user})
+    return render(request, 'accounts/forgot_password.html', {
+        'email_form': email_form,
+        'security_form': security_form,
+        'user': user
+    })
 
 
 # Reset Password
-@login_required
+
 def reset_password(request):
     if 'user_id' not in request.session:
-        return redirect('forgot_password')  # Redirect if user hasn't answered security questions
+        return redirect('forgot_password')  # Redirect to forgot password if session is missing
 
     user_id = request.session.get('user_id')
     user = User.objects.get(id=user_id)
@@ -227,7 +236,8 @@ def reset_password(request):
             user.set_password(new_password)
             user.save()
             del request.session['user_id']  # Clear session after resetting password
-            return redirect('login')
+            messages.success(request, 'Your password has been reset successfully. You can now log in.')
+            return redirect('login')  # Redirect to login page
     else:
         form = ResetPasswordForm()
 

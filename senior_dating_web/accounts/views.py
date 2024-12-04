@@ -7,7 +7,17 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.db.models import Q
 from django.contrib import messages
+from .forms import UpdateProfileImageForm
+from django.http import HttpResponseForbidden
 
+
+from django.contrib.auth.decorators import login_required
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+from django.contrib.auth import get_user_model
 
 def home(request):
     if request.user.is_authenticated:
@@ -42,6 +52,7 @@ def register(request):
 # Main page view
 @login_required
 def main_page(request):
+
     user_name = request.user.name
     user_bio = request.user.bio
     profile_image = request.user.profile_image
@@ -240,16 +251,16 @@ def update_bio(request):
 # Updating Profile Image
 @login_required
 def update_profile_image(request):
+    form = UpdateProfileImageForm(instance=request.user)
     if request.method == 'POST':
         form = UpdateProfileImageForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('main_page')
+            return redirect('main_page')  # Redirect after successful update
     else:
         form = UpdateProfileImageForm(instance=request.user)
 
-    return render(request, 'accounts/update_profile_image.html', {'form': form})
-
+    return render(request, 'accounts/update_profile_image.html', {'form': form, 'profile_image': request.user.profile_image})
 
 # Friend Request Handling
 @login_required
@@ -338,3 +349,26 @@ def add_friend(request, user_id):
     FriendRequest.objects.create(from_user=current_user, to_user=friend)
     messages.success(request, f"Friend request sent to {friend.username}.")
     return redirect('main_page')
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt  # Or use @ensure_csrf_cookie if CSRF middleware is enabled.
+def send_confirmation_email(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        email = data.get("email")
+        # Add logic to send confirmation email here
+        return JsonResponse({"message": "Confirmation email sent."}, status=200)
+    return JsonResponse({"error": "Invalid request."}, status=400)
+
+
+def confirm_delete_account(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    
+    if request.user == user:
+        user.delete()
+        messages.success(request, 'Your account has been deleted successfully.')
+        return redirect('main_page')
+    else:
+        return HttpResponseForbidden("You are not allowed to perform this action.")

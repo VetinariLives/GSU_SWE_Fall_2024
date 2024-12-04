@@ -2,6 +2,12 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 
+from django.conf import settings
+from django.conf.urls.static import static
+from .views import send_confirmation_email
+from .views import delete_account, confirm_delete_account  # Import the view here
+
+
 urlpatterns = [
     path('', views.home, name='home'),  # Homepage
     path('register/', views.register, name='register'),
@@ -27,5 +33,7 @@ urlpatterns = [
     path('password_reset_complete/', auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'), name='password_reset_complete'),
 
     # Account Deletion Confirmation
-    path('accounts/confirm_delete/<int:user_id>/', views.confirm_delete, name='confirm_delete'),  # Clearer naming for account deletion
-]
+    path('confirm-delete/<int:user_id>/', confirm_delete_account , name='confirm_delete'),  # Clearer naming for account deletion
+    path('send_confirmation_email/', send_confirmation_email, name='send_confirmation_email'),
+
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

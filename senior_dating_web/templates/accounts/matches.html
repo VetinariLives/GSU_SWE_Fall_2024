@@ -37,8 +37,9 @@
       }
 
       .wave.bottom {
-        bottom: -20%;
-        right: 0;
+        bottom: -50%;
+        right: -5%;
+        z-index: -2;
       }
 
       .container {
@@ -100,16 +101,25 @@
         width: 100px;
       }
 
-      .back-link {
-        margin: 20px;
-        display: inline-block;
-        text-decoration: none;
-        color: #2d6ea0;
-        font-weight: bold;
+      
+      
+      
+      .btn {
+        display: block;
+        width: fit-content;
+        margin: 15px 0;
+        padding: 10px;
+        font-size: 1em;
+        text-align: center;
+        border: none;
+        border-radius: 30px;
+        background-color: #2d6ea0;
+        color: #ffffff;
+        cursor: pointer;
+        transition: background 0.3s;
       }
-
-      .back-link:hover {
-        color: #1b4970;
+      .btn:hover {
+        background-color: #1b4970; 
       }
     </style>
   </head>
@@ -152,6 +162,6 @@
       {% endif %}
     </div>
 
-    <a href="{% url 'main_page' %}" class="back-link">Back to main page</a>
+    <a href="{% url 'main_page' %}" class="btn">Back to main page</a>
   </body>
 </html>

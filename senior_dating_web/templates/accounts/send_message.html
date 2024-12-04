@@ -1,22 +1,229 @@
-<h1>Chat with {{ receiver.name }}</h1>
-
-<!-- Conversation -->
-<div>
-  <ul>
-    {% for message in conversation %}
-    <li>
-      <strong>{{ message.sender.name }}:</strong> {{ message.text }}
-      <small>{{ message.timestamp }}</small>
-    </li>
-    {% endfor %}
-  </ul>
-</div>
-
-<!-- Message form -->
-<form method="post">
-  {% csrf_token %}
-  <textarea name="message" placeholder="Type your message here..."></textarea>
-  <button type="submit">Send</button>
-</form>
-
-<a href="{% url 'main_page' %}">Back to main page</a>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat - Senior Dating Web</title>
+    <link rel="stylesheet" href="/static/css/chat.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #ffffff;
+        overflow: hidden;
+      }
+      .wave {
+        position: absolute;
+        width: 50%;
+        height: 50%;
+        background: #93b8d8;
+        border-radius: 50%;
+        opacity: 0.8;
+      }
+      .wave.top {
+        top: -20%;
+        left: -20%;
+      }
+      .wave.bottom {
+        bottom: -20%;
+        right: -20%;
+      }
+      .chat-container {
+        position: relative;
+        z-index: 10;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+        width: 90%;
+        height: 80%;
+        display: flex;
+        flex-direction: column;
+      }
+      .chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .chat-header h1 {
+        font-size: 2em;
+        color: #2d6ea0;
+      }
+      .chat-header .chat-details {
+        display: flex;
+        align-items: center;
+      }
+      .chat-header img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 15px;
+      }
+      .chat-header .user-info {
+        font-size: 1em;
+        color: #333;
+      }
+      .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 10px;
+        margin-bottom: 20px;
+      }
+      .message {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+      .message.user {
+        justify-content: flex-start;
+      }
+      .message.you {
+        justify-content: flex-end;
+      }
+      .message img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+      .message-bubble {
+        background: #93b8d8;
+        color: #ffffff;
+        border-radius: 20px;
+        padding: 10px 15px;
+        max-width: 60%;
+        font-size: 1em;
+      }
+      .message.you .message-bubble {
+        background: #2d6ea0;
+      }
+      .chat-input-container {
+        display: flex;
+        align-items: center;
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+      }
+      .chat-input {
+        flex: 1;
+        border: none;
+        border-radius: 25px;
+        padding: 15px;
+        font-size: 1em;
+        background: #e0e0e0;
+        margin-right: 15px;
+        outline: none;
+      }
+      .send-btn {
+        background-color: #2d6ea0;
+        color: #ffffff;
+        border: none;
+        border-radius: 25px;
+        padding: 15px 25px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .send-btn:hover {
+        background-color: #1b4970;
+      }
+      .back-btn {
+        background-color: #93b8d8;
+        color: #ffffff;
+        border: none;
+        border-radius: 50%;
+        padding: 10px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .back-btn:hover {
+        background-color: #709ab1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background">
+      <div class="wave top"></div>
+      <div class="wave bottom"></div>
+    </div>
+    <div class="chat-container">
+      <div class="chat-header">
+        <button
+          class="back-btn"
+          onclick="window.location.href='{% url 'main_page' %}'"
+        >
+          &#8592;
+        </button>
+        <div class="chat-details">
+          {% if receiver.profile_image %}
+          <img
+            src="{{ receiver.profile_image.url }}"
+            alt="{{ receiver.name }}"
+          />
+          {% else %}
+          <img
+            src="/static/images/default_profile.png"
+            alt="Default Profile Picture"
+          />
+          {% endif %}
+          <div class="user-info">
+            <h1>{{ receiver.name }}</h1>
+            <p>{{ receiver.age }} years old - {{ receiver.location }}</p>
+          </div>
+        </div>
+      </div>
+      <!-- Conversation -->
+      <div class="chat-messages">
+        <ul>
+          {% for message in conversation %}
+          <li
+            class="message {% if message.sender == request.user %}you{% else %}user{% endif %}"
+          >
+            {% if message.sender != request.user %} {% if
+            message.sender.profile_image %}
+            <img
+              src="{{ message.sender.profile_image.url }}"
+              alt="{{ message.sender.name }}"
+            />
+            {% else %}
+            <img
+              src="/static/images/default_profile.png"
+              alt="Default Profile Picture"
+            />
+            {% endif %}
+            <div class="message-bubble">
+              <p>{{ message.text }}</p>
+              <small>{{ message.timestamp }}</small>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <!-- Message form -->
+      <form method="post" class="chat-input-container">
+        {% csrf_token %}
+        <input
+          type="text"
+          name="message"
+          class="chat-input"
+          placeholder="Type here..."
+          required
+        />
+        <button type="submit" class="send-btn">Send</button>
+      </form>
+    </div>
+  </body>
+</html>

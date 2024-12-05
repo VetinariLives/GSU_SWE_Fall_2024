@@ -1,3 +1,5 @@
+{% extends 'accessibility.html' %}
+{% block content %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -25,22 +27,7 @@
         background: #ffffff;
         overflow: hidden;
       }
-      .wave {
-        position: absolute;
-        width: 50%;
-        height: 50%;
-        background: #2d6ea0;
-        border-radius: 50%;
-        opacity: 0.8;
-      }
-      .wave.top {
-        top: -20%;
-        left: -20%;
-      }
-      .wave.bottom {
-        bottom: -20%;
-        right: -20%;
-      }
+
       .container {
         position: relative;
         z-index: 10;
@@ -94,10 +81,7 @@
     </style>
   </head>
   <body>
-    <div class="background">
-      <div class="wave top"></div>
-      <div class="wave bottom"></div>
-    </div>
+
     <div class="container">
       <h1>Hello!</h1>
       <button
@@ -119,3 +103,4 @@
     <footer>Having Problems? <a href="/contact_us/">Contact Us</a></footer>
   </body>
 </html>
+{% endblock %}

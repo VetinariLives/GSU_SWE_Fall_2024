@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Add the CSS for your zoom controls */
+        .zoom-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .zoom-controls button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .zoom-controls button:hover {
+            background-color: #0056b3;
+        }
+
+        /* MOVED background design */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Keep it behind content */
+            background: #ffffff; /* Default background */
+            overflow: hidden;
+        }
+        .wave {
+            position: fixed;
+            width: 50%;
+            height: 50%;
+            background: #2d6ea0;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+        .wave.top {
+            top: -20%;
+            left: -20%;
+        }
+        .wave.bottom {
+            bottom: -20%;
+            right: -20%;
+        }
+    </style>
+</head>
+<body>
+    <!-- General background -->
+    <div class="background">
+        <div class="wave top"></div>
+        <div class="wave bottom"></div>
+    </div>
+
+    <header>
+
+    </header>
+
+    <!-- Child content -->
+    <main id="zoomable">
+        <div id="zoomable-content">
+            {% block content %}
+            <!-- Child template content -->
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- Zoom Controls -->
+    <div class="zoom-controls">
+        <button id="zoom-in">Zoom In</button>
+        <button id="zoom-out">Zoom Out</button>
+        <button id="text-to-speech">Text-to-Speech</button>
+    </div>
+
+    <script>
+        let scale = localStorage.getItem('zoom-scale') 
+            ? parseFloat(localStorage.getItem('zoom-scale')) 
+            : 1;
+    
+        // Initialize zoom + zoom in & zoom out
+        applyZoom();
+    
+        document.getElementById('zoom-in').addEventListener('click', () => {
+            scale += 0.1;
+            applyZoom();
+            saveZoomState();
+        });
+    
+        document.getElementById('zoom-out').addEventListener('click', () => {
+            scale = Math.max(1, scale - 0.1);
+            applyZoom();
+            saveZoomState();
+        });
+    
+        function applyZoom() {
+            const zoomableContent = document.getElementById('zoomable-content');
+            zoomableContent.style.transform = `scale(${scale})`;
+            zoomableContent.style.transformOrigin = 'center center'; 
+    
+            
+            document.body.style.overflow = "auto";
+            zoomableContent.style.overflow = "auto"; 
+            zoomableContent.style.width = "100%";    
+            zoomableContent.style.height = "100%";
+        }
+    
+        // Save zoom
+        function saveZoomState() {
+            localStorage.setItem('zoom-scale', scale);
+        }
+    
+        // Text-to-Speech 
+        document.getElementById('text-to-speech').addEventListener('click', () => {
+            const text = document.getElementById('zoomable-content').innerText;
+            const speech = new SpeechSynthesisUtterance(text);
+            speech.lang = 'en-US';
+            speech.pitch = 1;
+            speech.rate = 1;
+            window.speechSynthesis.speak(speech);
+        });
+    </script>
+    
+    <footer>
+        
+    </footer>
+</body>
+</html>

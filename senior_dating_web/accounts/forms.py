@@ -21,7 +21,15 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'name', 'age', 'gender', 'location', 'bio', 
                   'security_question_1', 'security_answer_1', 'security_question_2', 'security_answer_2']
-
+        help_texts = {
+            'username': None,  # Removes the help text for the username field
+        }
+        def clean_password1(self):
+            # No validation, simply return the password
+            return self.cleaned_data.get('password1')
+        
+        
+        
 
 class EmailForm(forms.Form):
     email = forms.EmailField(label="Email")

@@ -178,7 +178,7 @@ def forgot_password(request):
             email = email_form.cleaned_data['email']
             try:
                 user = User.objects.get(email=email)
-                request.session['email'] = email  # Store email in session
+                request.session['email'] = email  # Temporarily store email in session
                 return redirect('forgot_password')  # Redirect to ask security questions
             except User.DoesNotExist:
                 email_form.add_error('email', 'No account found with this email.')
@@ -193,7 +193,8 @@ def forgot_password(request):
 
                 # Validate security answers
                 if user.security_answer_1 == answer_1 and user.security_answer_2 == answer_2:
-                    request.session['user_id'] = user.id  # Store user ID in session
+                    request.session.pop('email', None)  # Remove email from session
+                    request.session['user_id'] = user.id  # Store user ID in session temporarily
                     return redirect('reset_password')
                 else:
                     security_form.add_error(None, 'Security answers do not match.')

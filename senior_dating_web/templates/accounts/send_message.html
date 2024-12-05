@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat - Senior Dating Web</title>
-    <link rel="stylesheet" href="/static/css/chat.css" />
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -60,8 +59,9 @@
         margin-bottom: 20px;
       }
       .chat-header h1 {
-        font-size: 2em;
+        font-size: 1.5em;
         color: #2d6ea0;
+        margin: 0;
       }
       .chat-header .chat-details {
         display: flex;
@@ -73,8 +73,9 @@
         border-radius: 50%;
         margin-right: 15px;
       }
-      .chat-header .user-info {
-        font-size: 1em;
+      .chat-header .user-info p {
+        margin: 0;
+        font-size: 0.9em;
         color: #333;
       }
       .chat-messages {
@@ -106,7 +107,7 @@
         border-radius: 20px;
         padding: 10px 15px;
         max-width: 60%;
-        font-size: 1em;
+        font-size: 0.9em;
       }
       .message.you .message-bubble {
         background: #2d6ea0;
@@ -169,15 +170,9 @@
         </button>
         <div class="chat-details">
           {% if receiver.profile_image %}
-          <img
-            src="{{ receiver.profile_image.url }}"
-            alt="{{ receiver.name }}"
-          />
+          <img src="{{ receiver.profile_image.url }}" alt="{{ receiver.name }}" />
           {% else %}
-          <img
-            src="/static/images/default_profile.png"
-            alt="Default Profile Picture"
-          />
+          <img src="/static/images/default_profile.png" alt="Default Profile" />
           {% endif %}
           <div class="user-info">
             <h1>{{ receiver.name }}</h1>
@@ -185,24 +180,15 @@
           </div>
         </div>
       </div>
-      <!-- Conversation -->
       <div class="chat-messages">
         <ul>
           {% for message in conversation %}
-          <li
-            class="message {% if message.sender == request.user %}you{% else %}user{% endif %}"
-          >
-            {% if message.sender != request.user %} {% if
-            message.sender.profile_image %}
-            <img
-              src="{{ message.sender.profile_image.url }}"
-              alt="{{ message.sender.name }}"
-            />
-            {% else %}
-            <img
-              src="/static/images/default_profile.png"
-              alt="Default Profile Picture"
-            />
+          <li class="message {% if message.sender == request.user %}you{% else %}user{% endif %}">
+            {% if message.sender != request.user %}
+            <div>
+              <img src="{{ message.sender.profile_image.url }}" alt="{{ message.sender.name }}" />
+              <p><strong>{{ message.sender.name }}</strong></p></p></p> <!-- Display sender's name -->
+            </div>
             {% endif %}
             <div class="message-bubble">
               <p>{{ message.text }}</p>
@@ -212,16 +198,9 @@
           {% endfor %}
         </ul>
       </div>
-      <!-- Message form -->
       <form method="post" class="chat-input-container">
         {% csrf_token %}
-        <input
-          type="text"
-          name="message"
-          class="chat-input"
-          placeholder="Type here..."
-          required
-        />
+        <input type="text" name="message" class="chat-input" placeholder="Type here..." required />
         <button type="submit" class="send-btn">Send</button>
       </form>
     </div>
